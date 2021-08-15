@@ -1,0 +1,87 @@
+﻿@page
+@model IndexModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<form method="post">
+    <div>
+        <div class="row" style="margin: 12px">
+            <div class="col-lg-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        範例 : Line Notify Example
+                    </div>
+                    <div class="panel-body">
+                        說明:
+                        <ol>
+                            <li>使用此範例Source code，請先更換程式碼中《你的Client_id》<br /> (位於Index.cshtml) </li>
+                            <li>並且調整你<a href='https://notify-bot.line.me/zh_TW/' target="_blank">申請</a>好的LineNotify設定的callback url <br /> (測試階段應為http://localhost:5001/Callback)
+                            </li>
+                            <li>同時Callback.cshtml中的client_id與client_secret必須改為擬申請LineNotify後取得的正確資料</li>
+                            <li>相關說明請參考 : http://studyhost.blogspot.tw/2016/12/linebot6-botline-notify.html </li>
+                        </ol>
+                        使用:
+                        <ol>
+                            <li>請點選用戶註冊，將會取得該登入用戶的發送訊息token</li>
+                            <li>接著輸入訊息後，按下發送鈕即可測試</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        測試
+                    </div>
+                    <div class="panel-body">
+                        <button class="btn btn-primary" id="Button1" type="button">用戶註冊取回token</button>
+                        <br /><br />
+                        <div class="form-group">
+                            <label>取回的token:</label>
+                            <input name="txb_token" class="form-control" value="@Model.txb_token" />
+                            <label>訊息:</label>
+                            <input name="txb_msg" class="form-control" value="@Model.txb_msg" placeholder="請填寫要發送的訊息" />
+                            <label id="msg">@Model.show_msg</label><br />
+                            <button class="btn btn-primary" asp-page-handler="ButtonSend" ID="ButtonSend">發送</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css"
+    integrity="sha512-P5MgMn1jBN01asBgU0z60Qk4QxiXo86+wlFahKrsQf37c9cro517WzVSPPV1tDKzhku2iJ2FVgL67wG03SGnNA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"
+    integrity="sha512-XKa9Hemdy1Ui3KSGgJdgMyYlUg1gM+QhL6cnlyTe2qzMCYm4nAZ1PsVerQzTTXzonUR+dmswHqgJPuwCq1MaAg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    //建立OAuth 身分驗證頁面並導入
+    function Auth() {
+        var URL = 'https://notify-bot.line.me/oauth/authorize?';
+        URL += 'response_type=code';
+        URL += '&client_id=_________________';   //TODO:這邊要換成你的client_id
+        URL += '&redirect_uri=https://localhost:5001/Callback';   //TODO:要將此 redirect url 填回你的 LineNotify 後台設定
+        URL += '&scope=notify';
+        URL += '&state=abcde';
+        window.location.href = URL;
+    }
+    //Button1 click
+    function Button1_click() {
+        Auth();
+    }
+    //hook event
+    $(document).ready(function () {
+        $('#Button1').click(Button1_click);
+    });
+</script>
+}
